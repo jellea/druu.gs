@@ -27,6 +27,8 @@ App.View = (function(lng, app, undefined) {
   var makeExperiencePage = function(data){
     lng.View.Template.render('.reporttext', 'reportpage-tmp', data);
     lng.View.Scroll.refresh('reportpage');
+    lng.View.Scroll.first('details-experiences');
+    $('.reporttext').css('-webkit-transform',"translate3d(0px, 0px, 0px) scale(1)") // do without jquery
   };
 
   var makeFavoritesList = function(data){
@@ -54,7 +56,6 @@ App.View = (function(lng, app, undefined) {
     };
     lng.View.Template.render('#details-experiences ul', 'experiencelist-tmp', contenttmp);
     lng.View.Scroll.refresh('details-experiences');
-    lng.View.Scroll.first('details-experiences');
   };
 
   var scrollUp = function(){
