@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Erowid App</title>
+  <title>Druu.gs</title>
   <meta name="description" content="">
   <meta name="author" content="Javier Jiménez Villar (@soyjavi)">
   <!-- Mobile viewport optimization http://goo.gl/b9SaQ -->
@@ -50,22 +50,42 @@
       </nav>
     </footer>
 
-    <article id="start" class="current indented startpage">
+    <article id="start" class="current indented startpage scrollable">
     <div class="introtext">
-      <p>This is the beta version of the unofficial Erowid App.</p>
       <h2 class="title" data-icon="calendar">Todo:</h2>
       <ul class="list">
-        <li>info page scraping.</li>
-        <li>dose chart</li>
-        <li>tabs</li>
-        <li>scrollUp</li>
-        <li>cache report's and experience lists</li>
+        <li>scraping info pages</li>
+        <li>dose chart missing on experience reports</li>
+        <li>readability options in experience reports, such as font change and previous/next buttons</li>
+        <li>make (this) start page usable</li>
+        <li>offline capability</li>
+        <li>favorite substances and articles</li>
+        <li>share buttons</li>
+        <li>app graphics (app icon, funky colors)</li>
+        <li>scrolling up on switching experiences</li>
       </ul>
+      </br>
+      <h2 class="title" data-icon="calendar">Developer needs tea!</h2>
+      Developing an app like this costs a lot of time and energy. Want to support my energy level? Donate me a cup of tea!</br>
+      <form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+      <input type="hidden" name="cmd" value="_s-xclick">
+      <input type="hidden" name="encrypted" value="-----BEGIN PKCS7-----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-----END PKCS7-----
+      ">
+      <input type="image" src="https://www.paypalobjects.com/en_US/GB/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal — The safer, easier way to pay online.">
+      <img alt="" border="0" src="https://www.paypalobjects.com/nl_NL/i/scr/pixel.gif" width="1" height="1">
+      </form>
+      </br>
+      <h2 class="title" data-icon="calendar">Donate to Erowid!</h2>
+      <a href="https://www.paypal.com/xclick/business=donations@erowid.org&item_name=Donation"><input type="image" src="https://www.paypalobjects.com/en_US/GB/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal — The safer, easier way to pay online."></a>
+      </form>
+
+
     </div>
     <div class="favorites">
     <h3 class="title" data-icon="star">Favorites</h3>
     <ul id="favlist" class="list">
     </ul>
+    </div>
   </div>
     </article>
     <article id="details-info" class="indented">

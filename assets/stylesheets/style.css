@@ -1,29 +1,30 @@
-input[type="search"]{
-	width:100%;
+input[type="search"]
+{
+	width:          100%;
 }
-input[type="search"] + .button {
-	display: none;
+input[type="search"] + .button 
+{
+	display:        none;
 }
-.aside-search{
-	display: none;
+.aside-search
+{
+	display:        none;
 }
 .reporttext{
-  font-size: 16px;
-  line-height: 24px;
+  font-size:      16px;
+  line-height:    24px;
 }
 
 @media screen and (min-width: 900px) {
-  .favorites{
-  width:40%;
-  float:left;
+  .favorites, .introtext
+  {
+    width:        45%;
+    float:        left;
   }
-  .introtext{
-  width:40%;
-  float:left;
-  }
-  .reporttext{
-  width: 50%;
-  margin-left: 25%;
+  .reporttext
+  {
+    width:        50%;
+    margin-left:  25%;
   }
 }
 
@@ -32,6 +33,10 @@ input[type="search"] + .button {
   z-index:3;
 }
 
+input[type="image"] {
+width: auto;
+border: none;
+}
 #details-experiences{
   z-index:3;
 }
