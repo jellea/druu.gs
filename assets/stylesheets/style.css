@@ -1,0 +1,43 @@
+input[type="search"]{
+	width:100%;
+}
+input[type="search"] + .button {
+	display: none;
+}
+.aside-search{
+	display: none;
+}
+.reporttext{
+  font-size: 16px;
+  line-height: 24px;
+}
+
+@media screen and (min-width: 900px) {
+  .favorites{
+  width:40%;
+  float:left;
+  }
+  .introtext{
+  width:40%;
+  float:left;
+  }
+  .reporttext{
+  width: 50%;
+  margin-left: 25%;
+  }
+}
+
+#start{
+  bottom:0px;
+  z-index:3;
+}
+
+#details-experiences{
+  z-index:3;
+}
+#details-info{
+  top:28px;
+}
+.disabled{
+  
+}
