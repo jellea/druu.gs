@@ -5,7 +5,7 @@ App.Data = (function(lng, app, undefined) {
     schema: [
         {
             name: 'substances',
-            drop: true,
+            drop: false,
             fields: {
               id: 'INTEGER PRIMARY KEY',
               name: 'TEXT',
@@ -66,9 +66,8 @@ App.Data = (function(lng, app, undefined) {
     });
   };
   var getSubstanceList = function(){
+    // check if sqlite excists otherwise get
     lng.Service.get("data/substances-list2.json", '10 days', function(response) {
-      lng.Core.orderByProperty(response, 'name', 'asc');
-      App.View.makeAsideSubstanceList(response);
       for(item in response){
         delete response[item].deepinfo;
         if (response[item].info == "")
@@ -76,19 +75,26 @@ App.Data = (function(lng, app, undefined) {
             delete response[item].info;
           }
         response[item].id = item;
-        lng.Data.Sql.insert('substances', response[item]);
       };
-      //lng.Core.orderByProperty(response, 'totalexp', 'desc');
-      executeSelect('SELECT * FROM substances ORDER BY totalexp DESC LIMIT 10', 
+      lng.Data.Sql.insert('substances', response);
+      
+      executeSelect('SELECT * FROM substances ORDER BY name ASC',
+                    function(result) 
+                    {
+                        App.View.makeAsideSubstanceList(result);
+                    });
+                    }
+                   );
+      executeSelect('SELECT * FROM substances ORDER BY totalexp DESC LIMIT 10',
                     function(result) {
                       var top10 = [];
-                      for (i in result) {
+                      for (i in result) 
+                        {
                         top10.push(result[i]);
-                      }
+                        }
                       App.View.makeFavoritesList(top10);
-                    });
-
-    });
+                    }
+                   );
   };
   getSubstanceList();
 
@@ -96,10 +102,11 @@ App.Data = (function(lng, app, undefined) {
     LUNGO.Sugar.Growl.show('Loading!', 'Downloading Info and Experiences','loading');
     var url = "http://query.yahooapis.com/v1/public/yql"
     var getdata = {
-      q: "select * from html where url='"+encodeURIComponent(substanceobj.exp)+"' and xpath='//center/table/tr/td/form/table/tr[position()>2]'",
+      q: "select * from html where url='"+encodeURIComponent(substanceobj[0].exp)+"' and xpath='//center/table/tr/td/form/table/tr[position()>2]'",
       format:'json'
     }
     lng.Service.cache(url, getdata, '10 days', function(response) {
+      console.log(response);
       App.View.makeExperiencesList(response.query.results.tr);
       LUNGO.Sugar.Growl.hide();
     });

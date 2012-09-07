@@ -1,12 +1,12 @@
 App.View = (function(lng, app, undefined) {
   lng.View.Template.create('favorites-tmp',
                            '<li class="selectable" data-count="{{totalexp}}">\
-                           <a id="{{perma}}" href="#details-experiences"\
+                           <a id="{{id}}" href="#details-experiences"\
                            data-target="article">{{name}}</a></li>');
 
   lng.View.Template.create('substances-aside-tmp',
-                           '<a id="{{perma}}"\
-                           href="#details-experiences" class="{{perma}} aside-item"\
+                           '<a id="{{id}}"\
+                           href="#details-experiences" class="{{id}} aside-item"\
                            data-count="{{totalexp}}" data-target="article">\
                            {{name}}</a>');
 
@@ -40,7 +40,7 @@ App.View = (function(lng, app, undefined) {
     lng.View.Template.render('#substances-aside .aside-items', 'substances-aside-tmp', data);
     lng.View.Scroll.refresh('substances-aside');
     for(item in data){
-      lng.View.Element.count('a[id="' + data[item].perma + '"]', data[item].totalexp);
+      lng.View.Element.count('#substances-aside a[id="' + data[item].id + '"]', data[item].totalexp);
     }
   };
 
@@ -49,13 +49,18 @@ App.View = (function(lng, app, undefined) {
     //console.log(data);
     if(App.Data.type(data)=="Object"){var data=[data];};
     for(item in data){
-    contenttmp.push({
-      author: data[item].td[2].p,
-      title:  data[item].td[1].a.content,
-      subs:   data[item].td[3].p,
-      date:   data[item].td[4].p,
-      url:    data[item].td[1].a.href
-    });
+      try {
+        contenttmp.push({
+          author: data[item].td[2].p,
+          title:  data[item].td[1].a.content,
+          subs:   data[item].td[3].p,
+          date:   data[item].td[4].p,
+          url:    data[item].td[1].a.href
+        });
+      }
+      catch (err) {
+        console.log("data unknown");
+      }
     };
     lng.View.Template.render('#details-experiences ul', 'experiencelist-tmp', contenttmp);
     lng.View.Scroll.refresh('details-experiences');
