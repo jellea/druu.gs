@@ -39,6 +39,9 @@ App.View = (function(lng, app, undefined) {
   var makeAsideSubstanceList = function(data){
     lng.View.Template.render('#substances-aside .aside-items', 'substances-aside-tmp', data);
     lng.View.Scroll.refresh('substances-aside');
+    for(item in data){
+      lng.View.Element.count('a[id="' + data[item].perma + '"]', data[item].totalexp);
+    }
   };
 
   var makeExperiencesList = function(data){
