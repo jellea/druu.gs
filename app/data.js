@@ -24,6 +24,20 @@ App.Data = (function(lng, app, undefined) {
     ]
   });
 
+  var executeSelect = function(sql, callBack)
+  {
+    var result = [];
+    lng.Data.Sql.execute(sql, function(rs){
+      for (var i = 0, len = rs.rows.length; i < len; i++) 
+        {
+        result.push(rs.rows.item(i));
+        }
+      //console.log(callBack);
+      callBack(result);
+    }
+    );
+  }
+
   var type = function type(o){
     return !!o && Object.prototype.toString.call(o).match(/(\w+)\]/)[1];
   }
@@ -52,24 +66,28 @@ App.Data = (function(lng, app, undefined) {
     });
   };
   var getSubstanceList = function(){
-    //LUNGO.Sugar.Growl.show('Loading!', 'Downloading substances','loading');
     lng.Service.get("data/substances-list2.json", '10 days', function(response) {
-      window.SubstanceList = response;
       lng.Core.orderByProperty(response, 'name', 'asc');
       App.View.makeAsideSubstanceList(response);
       for(item in response){
-        //lng.Data.Sql.insert('substances', row);
-        lng.Data.Cache.set(response[item].perma, response[item]);
-        lng.Data.Cache.set("currentpage", response[item].perma);
+        delete response[item].deepinfo;
+        if (response[item].info == "")
+          {
+            delete response[item].info;
+          }
+        response[item].id = item;
+        lng.Data.Sql.insert('substances', response[item]);
       };
-      lng.Core.orderByProperty(response, 'totalexp', 'desc');
-      var top10 = []
-      for (i=0;i<11;++i) {
-        top10.push(response[i]);
-      }
-      App.View.makeFavoritesList(top10);
+      //lng.Core.orderByProperty(response, 'totalexp', 'desc');
+      executeSelect('SELECT * FROM substances ORDER BY totalexp DESC LIMIT 10', 
+                    function(result) {
+                      var top10 = [];
+                      for (i in result) {
+                        top10.push(result[i]);
+                      }
+                      App.View.makeFavoritesList(top10);
+                    });
 
-      //LUNGO.Sugar.Growl.hide();
     });
   };
   getSubstanceList();
