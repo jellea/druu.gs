@@ -3,24 +3,38 @@ App.Data = (function(lng, app, undefined) {
     name: 'druu.gs',
     version: '1.0',
     schema: [
-        {
-            name: 'substances',
-            drop: false,
-            fields: {
-              id: 'INTEGER PRIMARY KEY',
-              name: 'TEXT',
-              info: 'TEXT',
-              exp: 'TEXT',
-              perma: 'TEXT',
-              totalexp: 'INTEGER',
-              basics: 'TEXT',
-              chemistry: 'TEXT',
-              dose: 'TEXT',
-              effects: 'TEXT',
-              images: 'TEXT',
-              law: 'TEXT'
-            }
+      {
+        name: 'substances',
+        drop: false,
+        fields: {
+          id: 'INTEGER PRIMARY KEY',
+          name: 'TEXT',
+          info: 'TEXT',
+          exp: 'TEXT',
+          perma: 'TEXT',
+          totalexp: 'INTEGER',
+          basics: 'TEXT',
+          chemistry: 'TEXT',
+          dose: 'TEXT',
+          effects: 'TEXT',
+          images: 'TEXT',
+          law: 'TEXT'
         }
+      },
+      {
+        name: 'experiences',
+        fields: {
+          id: 'INTEGER PRIMARY KEY',
+          fav: 'INTEGER',
+          title: 'TEXT',
+          author: 'TEXT',
+          content: '',
+          date: 'TEXT',
+          url: 'TEXT',
+          subs: 'TEXT',
+          subid: 'INTEGER',
+        }
+      }
     ]
   });
 
@@ -77,7 +91,7 @@ App.Data = (function(lng, app, undefined) {
         response[item].id = item;
       };
       lng.Data.Sql.insert('substances', response);
-      
+
       executeSelect('SELECT * FROM substances ORDER BY name ASC',
                     function(result) 
                     {
@@ -106,6 +120,22 @@ App.Data = (function(lng, app, undefined) {
       format:'json'
     }
     lng.Service.cache(url, getdata, '10 days', function(response) {
+      rowdata = []
+      for (item in response.query.results.tr)
+        {
+          var row = response.query.results.tr[item];
+          var r = {};
+          r.id =     row.td[1].a.href.replace("exp.php?ID=","");
+          r.author = row.td[2].p;
+          r.title =  row.td[1].a.content;
+          r.subs =   row.td[3].p;
+          r.date =   row.td[4].p;
+          r.url =    row.td[1].a.href;
+          r.subid =  substanceobj[0].id;
+          rowdata.push(r);
+        }
+      lng.Data.Sql.insert('experiences', rowdata);
+
       console.log(response);
       App.View.makeExperiencesList(response.query.results.tr);
       LUNGO.Sugar.Growl.hide();
