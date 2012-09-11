@@ -23,9 +23,10 @@ App.Data = (function(lng, app, undefined) {
       },
       {
         name: 'experiences',
+        drop: true,
         fields: {
           id: 'INTEGER PRIMARY KEY',
-          fav: 'INTEGER',
+          fav: 'INTEGER DEFAULT 0',
           title: 'TEXT',
           author: 'TEXT',
           content: '',
@@ -79,27 +80,9 @@ App.Data = (function(lng, app, undefined) {
       LUNGO.Sugar.Growl.hide();
     });
   };
-  var getSubstanceList = function(){
-    // check if sqlite excists otherwise get
-    lng.Service.get("data/substances-list2.json", '10 days', function(response) {
-      for(item in response){
-        delete response[item].deepinfo;
-        if (response[item].info == "")
-          {
-            delete response[item].info;
-          }
-        response[item].id = item;
-      };
-      lng.Data.Sql.insert('substances', response);
 
-      executeSelect('SELECT * FROM substances ORDER BY name ASC',
-                    function(result) 
-                    {
-                        App.View.makeAsideSubstanceList(result);
-                    });
-                    }
-                   );
-      executeSelect('SELECT * FROM substances ORDER BY totalexp DESC LIMIT 10',
+  var makeTop10 = function () {
+    executeSelect('SELECT * FROM substances ORDER BY totalexp DESC LIMIT 10',
                     function(result) {
                       var top10 = [];
                       for (i in result) 
@@ -108,38 +91,80 @@ App.Data = (function(lng, app, undefined) {
                         }
                       App.View.makeFavoritesList(top10);
                     }
-                   );
-  };
+     );
+  }
+
+
+  var getSubstanceList = function(){
+    executeSelect('SELECT * FROM substances ORDER BY name ASC',
+      function(result) {
+        if(result.length == 0) 
+        {
+          lng.Service.get("data/substances-list2.json", '10 days', function(response) 
+          {
+            for(item in response)
+            {
+              delete response[item].deepinfo;
+              if (response[item].info == "")
+              {
+                  delete response[item].info;
+              }
+              response[item].id = item;
+            };
+            lng.Data.Sql.insert('substances', response);
+            getSubstanceList();
+          });
+        }
+        else
+        {
+          App.View.makeAsideSubstanceList(result);
+          makeTop10();
+        }
+      }
+    )
+  }
   getSubstanceList();
 
   var getExperiencesList = function(substanceobj){
     LUNGO.Sugar.Growl.show('Loading!', 'Downloading Info and Experiences','loading');
-    var url = "http://query.yahooapis.com/v1/public/yql"
-    var getdata = {
-      q: "select * from html where url='"+encodeURIComponent(substanceobj[0].exp)+"' and xpath='//center/table/tr/td/form/table/tr[position()>2]'",
-      format:'json'
-    }
-    lng.Service.cache(url, getdata, '10 days', function(response) {
-      rowdata = []
-      for (item in response.query.results.tr)
-        {
-          var row = response.query.results.tr[item];
-          var r = {};
-          r.id =     row.td[1].a.href.replace("exp.php?ID=","");
-          r.author = row.td[2].p;
-          r.title =  row.td[1].a.content;
-          r.subs =   row.td[3].p;
-          r.date =   row.td[4].p;
-          r.url =    row.td[1].a.href;
-          r.subid =  substanceobj[0].id;
-          rowdata.push(r);
-        }
-      lng.Data.Sql.insert('experiences', rowdata);
-
-      console.log(response);
-      App.View.makeExperiencesList(response.query.results.tr);
-      LUNGO.Sugar.Growl.hide();
-    });
+    executeSelect('SELECT * FROM experiences WHERE subid="'+substanceobj[0].id+'" LIMIT 100',
+      function(result) {
+        if(result.length == 0) 
+          {
+            console.log(substanceobj[0]);
+            var url = "http://query.yahooapis.com/v1/public/yql";
+            var getdata = {
+              q: "select * from html where url='"+encodeURIComponent(substanceobj[0].exp)+"' and xpath='//center/table/tr/td/form/table/tr[position()>2]'",
+              format:'json'
+            }
+            lng.Service.cache(url, getdata, '10 days', function(response) {
+              console.log(response);
+              rowdata = []
+              for (item in response.query.results.tr)
+                {
+                  console.log("item: "+ item);
+                  var row = response.query.results.tr[item];
+                  console.log("row: "+ row);
+                  var r =    {};
+                  r.id =     row.td[1].a.href.replace("exp.php?ID=","");
+                  r.author = row.td[2].p;
+                  r.title =  row.td[1].a.content;
+                  r.subs =   row.td[3].p;
+                  r.date =   row.td[4].p;
+                  r.url =    row.td[1].a.href;
+                  r.fav =    0;
+                  r.subid =  substanceobj[0].id;
+                  rowdata.push(r);
+                }
+              lng.Data.Sql.insert('experiences', rowdata);
+              App.View.makeExperiencesList(rowdata);
+            });
+          }
+        else
+          {
+            App.View.makeExperiencesList(result);
+          }
+      });
   };
   return {
     getExperiencesList: getExperiencesList,

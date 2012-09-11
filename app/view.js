@@ -45,25 +45,10 @@ App.View = (function(lng, app, undefined) {
   };
 
   var makeExperiencesList = function(data){
-    var contenttmp = [];
-    //console.log(data);
-    if(App.Data.type(data)=="Object"){var data=[data];};
-    for(item in data){
-      try {
-        contenttmp.push({
-          author: data[item].td[2].p,
-          title:  data[item].td[1].a.content,
-          subs:   data[item].td[3].p,
-          date:   data[item].td[4].p,
-          url:    data[item].td[1].a.href
-        });
-      }
-      catch (err) {
-        console.log("data unknown");
-      }
-    };
-    lng.View.Template.render('#details-experiences ul', 'experiencelist-tmp', contenttmp);
+    console.log(data);
+    lng.View.Template.render('#details-experiences ul', 'experiencelist-tmp', data);
     lng.View.Scroll.refresh('details-experiences');
+    LUNGO.Sugar.Growl.hide();
   };
 
   var scrollUp = function(){
