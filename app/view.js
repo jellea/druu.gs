@@ -3,12 +3,15 @@ App.View = (function(lng, app, undefined)
   lng.View.Template.create('favorites-tmp',
                            '<li class="selectable">\
                            <a id="{{id}}" href="#report"\
-                           data-target="article">{{title}}</a></li>');
+                           data-target="section">{{title}}</a></li>');
 
   lng.View.Template.create('top10-tmp',
                            '<li class="selectable">\
                            <a id="{{id}}" href="#details-experiences"\
-                           data-target="article">{{name}}</a></li>');
+                           data-target="article">\
+                           <span class="bubble count">{{totalexp}}</span>\
+                           {{name}}</a>\
+                           </li>');
 
 
   lng.View.Template.create('substances-aside-tmp',

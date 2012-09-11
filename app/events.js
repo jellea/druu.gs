@@ -24,7 +24,10 @@ App.Events = (function(lng, app, undefined)
 
   lng.dom('a[href="#report"]').tap(function(event)
   {
-    App.Data.getExperience(event.currentTarget.id);
+    if (event.currentTarget.id != "NoGo")
+    {
+      App.Data.getExperience(event.currentTarget.id);
+    }
   });
 
   lng.dom('.search-icon').tap(function()

@@ -139,6 +139,10 @@ App.Data = (function(lng, app, undefined)
     executeSelect('SELECT * FROM experiences WHERE fav = 1',
       function(result) {
         var favlist = [];
+        if (result.length==0) {
+          favlist.push({title:"No favorite experiences yet! Click the star to \
+                       add a favorite",id:"NoGo"});
+        }
         for (i in result) 
           {
           favlist.push(result[i]);
