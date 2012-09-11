@@ -1,4 +1,5 @@
-App.View = (function(lng, app, undefined) {
+App.View = (function(lng, app, undefined)
+{
   lng.View.Template.create('favorites-tmp',
                            '<li class="selectable" data-count="{{totalexp}}">\
                            <a id="{{id}}" href="#details-experiences"\
