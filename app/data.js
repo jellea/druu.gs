@@ -140,6 +140,9 @@ App.Data = (function(lng, app, undefined) {
             lng.Service.cache(url, getdata, '10 days', function(response) {
               console.log(response);
               rowdata = []
+              if(App.Data.type(response.query.results.tr)=="Object"){
+                response.query.results.tr = [response.query.results.tr];
+              };
               for (item in response.query.results.tr)
                 {
                   console.log("item: "+ item);
