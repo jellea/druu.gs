@@ -120,7 +120,7 @@ App.Data = (function(lng, app, undefined)
       });
   };
 
-  var makeTop10 = function() 
+  var makeTop10List = function()
   {
     executeSelect('SELECT * FROM substances ORDER BY totalexp DESC LIMIT 10',
       function(result) {
@@ -129,9 +129,30 @@ App.Data = (function(lng, app, undefined)
           {
           top10.push(result[i]);
           }
-        App.View.makeFavoritesList(top10);
+        App.View.makeTop10List(top10);
       }
     );
+  }
+
+  var makeFavList = function()
+  {
+    executeSelect('SELECT * FROM experiences WHERE fav = 1',
+      function(result) {
+        var favlist = [];
+        for (i in result) 
+          {
+          favlist.push(result[i]);
+          }
+        App.View.makeFavoritesList(favlist);
+      }
+    );
+  }
+
+  var setFav = function()
+  {
+    executeSelect('UPDATE experiences SET fav="'+1+'"\
+                  WHERE id='+$('.reporttext').attr('id')+
+                  ';',function(status){});
   }
 
   var searchSubstance = function(name)
@@ -170,7 +191,8 @@ App.Data = (function(lng, app, undefined)
         else
         {
           App.View.makeAsideSubstanceList(result);
-          makeTop10();
+          makeFavList();
+          makeTop10List();
         }
       }
     )
@@ -231,7 +253,9 @@ App.Data = (function(lng, app, undefined)
     getExperience:      getExperience,
     getInfolinks:       getInfolinks,
     searchSubstance:    searchSubstance,
-    getNextExperience:  getNextExperience
+    getNextExperience:  getNextExperience,
+    setFav:             setFav,
+    makeTop10List:      makeTop10List
   }
 
 })(LUNGO, App);

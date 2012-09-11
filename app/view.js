@@ -1,9 +1,15 @@
 App.View = (function(lng, app, undefined)
 {
   lng.View.Template.create('favorites-tmp',
-                           '<li class="selectable" data-count="{{totalexp}}">\
+                           '<li class="selectable">\
+                           <a id="{{id}}" href="#report"\
+                           data-target="article">{{title}}</a></li>');
+
+  lng.View.Template.create('top10-tmp',
+                           '<li class="selectable">\
                            <a id="{{id}}" href="#details-experiences"\
                            data-target="article">{{name}}</a></li>');
+
 
   lng.View.Template.create('substances-aside-tmp',
                            '<a id="{{id}}"\
@@ -31,6 +37,11 @@ App.View = (function(lng, app, undefined)
     lng.dom('#report header .title').text(data[0].title);
     lng.dom('.reporttext').attr('id',data[0].id);
     lng.dom('.reporttext').attr('subid',data[0].subid);
+    if (data[0].fav == 1){
+      $('nav .icon.star').css('color','#fff');
+    } else {
+      $('nav .icon.star').css('color','inherit');
+    }
     lng.View.Scroll.refresh('reportpage');
     lng.View.Scroll.first('details-experiences');
     $('.reporttext').css('-webkit-transform',"translate3d(0px, 0px, 0px) scale(1)") // do without jquery
@@ -39,7 +50,13 @@ App.View = (function(lng, app, undefined)
   var makeFavoritesList = function(data)
   {
     lng.View.Template.render('#favlist', 'favorites-tmp', data); // lng.View.Scroll.append?
-    lng.View.Scroll.refresh('welcome');
+    lng.View.Scroll.refresh('start');
+  };
+
+  var makeTop10List = function(data)
+  {
+    lng.View.Template.render('#top10list', 'top10-tmp', data); // lng.View.Scroll.append?
+    lng.View.Scroll.refresh('start');
   };
 
   var makeAsideSubstanceList = function(data)
@@ -66,11 +83,12 @@ App.View = (function(lng, app, undefined)
   };
 
   return{
-    makeExperiencesList: makeExperiencesList,
-    makeFavoritesList: makeFavoritesList,
-    makeAsideSubstanceList: makeAsideSubstanceList,
-    makeExperiencePage: makeExperiencePage,
-    scrollUp: scrollUp
+    makeExperiencesList:      makeExperiencesList,
+    makeFavoritesList:        makeFavoritesList,
+    makeAsideSubstanceList:   makeAsideSubstanceList,
+    makeExperiencePage:       makeExperiencePage,
+    scrollUp:                 scrollUp,
+    makeTop10List:            makeTop10List
   }
 
 })(LUNGO, App);

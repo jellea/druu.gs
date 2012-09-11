@@ -16,7 +16,7 @@ input[type="search"] + .button
 }
 
 @media screen and (min-width: 900px) {
-  .favorites, .introtext
+  .favorites, .introtext, .toplist
   {
     width:        47%;
     float:        left;

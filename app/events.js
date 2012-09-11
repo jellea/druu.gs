@@ -27,7 +27,6 @@ App.Events = (function(lng, app, undefined)
     App.Data.getExperience(event.currentTarget.id);
   });
 
-
   lng.dom('.search-icon').tap(function()
   {
     lng.dom('.aside-search').show();
@@ -50,8 +49,6 @@ App.Events = (function(lng, app, undefined)
       },800);
     }
   });
-
-
 
   $('input + a').click(function(event)
   {
@@ -80,7 +77,7 @@ App.Events = (function(lng, app, undefined)
   });
 
   $(document).keyup(function (e) {
-    if(e.which == 37) { GetNext("prev"); }
+    if (e.which == 37) { GetNext("prev"); }
     else if (e.which == 35) { GetNext("next"); }
   });
 
@@ -92,6 +89,11 @@ App.Events = (function(lng, app, undefined)
       nextprev);
   }
 
+  $('nav .icon.star').click(function(event)
+  {
+    App.Data.setFav();
+    $('nav .icon.star').css("color","#fff");
+  });
 
   lng.View.Aside.show('#welcome', '#substances-aside');
 
