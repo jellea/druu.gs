@@ -18,12 +18,12 @@ App.Events = (function(lng, app, undefined)
 
   lng.dom('a[href="#details-experiences"]').tap(function(event)
   {
+    $('input[type="search"]').blur();
     goToSubtance(event.currentTarget.id);
   });
 
   lng.dom('a[href="#report"]').tap(function(event)
   {
-    lng.dom('#report header .title').text(event.currentTarget.innerText);
     App.Data.getExperience(event.currentTarget.id);
   });
 
@@ -38,6 +38,37 @@ App.Events = (function(lng, app, undefined)
     console.log(event.target.value);
     App.Data.searchSubstance(event.target.value);
   });
+
+  lng.dom('.reporttext').swipeRight(function()
+  {
+    GetNext("prev");
+  });
+
+  lng.dom('.reportarrowleft').tap(function()
+  {
+    GetNext("prev");
+  });
+
+  lng.dom('.reporttext').swipeLeft(function()
+  {
+    GetNext("next");
+  });
+  
+
+  lng.dom('.reportarrowright').tap(function()
+  {
+    GetNext("next");
+  });
+
+
+  function GetNext(nextprev)
+  {
+    App.Data.getNextExperience(
+      $('.reporttext').attr('id'),
+      $('.reporttext').attr('subid'),
+      nextprev);
+  }
+
 
   lng.View.Aside.show('#welcome', '#substances-aside');
 

@@ -29,20 +29,37 @@ input[type="search"] + .button
 }
 
 #start{
-  bottom:0px;
-  z-index:3;
+  bottom:         0px;
+  z-index:        3;
 }
 
 input[type="image"] {
-width: auto;
-border: none;
+  width:          auto;
+  border:         none;
 }
 #details-experiences{
-  z-index:3;
+  z-index:        3;
 }
 #details-info{
-  top:28px;
+  top:            28px;
 }
 .disabled{
   
+}
+
+.reportarrowleft, .reportarrowright{
+  position:       absolute;
+  font-size:      30px;
+  display:        block;
+  height:         100%;
+  z-index:        1000;
+  top:            0px;
+  padding-top:    25%;
+  width:          20%;
+  color:          #C9C9C9;
+}
+
+.reportarrowright{
+  right:          0px;
+  text-align:     right;
 }

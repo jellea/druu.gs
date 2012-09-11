@@ -13,7 +13,7 @@ App.View = (function(lng, app, undefined)
 
   lng.View.Template.create('experiencelist-tmp',
                            '<li class="selectable">\
-                           <a href="#report" id="{{url}}" data-target="section">\
+                           <a href="#report" id="{{id}}" data-target="section">\
                            <div class="onright">{{subs}}</div>\
                            {{title}}\
                            <small>{{author}} {{date}}</small></a>\
@@ -21,13 +21,16 @@ App.View = (function(lng, app, undefined)
   ');
 
   lng.View.Template.create('reportpage-tmp',
-                           '{{bodycontent}}'
+                           '{{content}}'
                            );
 
 
   var makeExperiencePage = function(data)
   {
     lng.View.Template.render('.reporttext', 'reportpage-tmp', data);
+    lng.dom('#report header .title').text(data[0].title);
+    lng.dom('.reporttext').attr('id',data[0].id);
+    lng.dom('.reporttext').attr('subid',data[0].subid);
     lng.View.Scroll.refresh('reportpage');
     lng.View.Scroll.first('details-experiences');
     $('.reporttext').css('-webkit-transform',"translate3d(0px, 0px, 0px) scale(1)") // do without jquery

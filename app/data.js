@@ -27,7 +27,7 @@ App.Data = (function(lng, app, undefined)
       },
       {
         name: 'experiences',
-        drop: true,
+        drop: false,
         fields:
         {
           id: 'INTEGER PRIMARY KEY',
@@ -69,26 +69,53 @@ App.Data = (function(lng, app, undefined)
     return substanceobj;
   }
 
+  var getNextExperience = function(current,subid,prevnext)
+  {
+    if (prevnext == "prev")
+    {
+      var arrow = "<";
+      var order = "ORDER BY id DESC";
+    }
+    else
+    {
+      var arrow = ">";
+      var order = "";
+    }
+    executeSelect('SELECT id FROM experiences WHERE id '+arrow+' "'+current+'" AND subid='+subid+' '+order+' LIMIT 1',
+                  function(result) {
+                    getExperience(result[0].id);
+                  });
+  }
+
   var getExperience = function(reportid)
   {
-    LUNGO.Sugar.Growl.show('Loading!', 'Downloading Experience','loading');
-    var url = "http://query.yahooapis.com/v1/public/yql"
-    var getdata =
-    {
-      q: "select * from html where url='\
-      http://www.erowid.org/experiences/"+encodeURIComponent(reportid)+"'\
-      and xpath='//div[@class=\"report-text-surround\"]/p' and charset='iso-8859-1'",
-      format:'json',
-    }
-    lng.Service.cache(url, getdata, '10 minutes', function(response) 
-    {
-      data =
-      {
-        bodycontent: response.query.results.p.content.replace(/\n/g,"<br>")
-      }
-      App.View.makeExperiencePage(data);
-      LUNGO.Sugar.Growl.hide();
-    });
+    executeSelect('SELECT * FROM experiences WHERE id = "'+reportid+'"',
+      function(result) {
+        if (result[0].content == null){
+          LUNGO.Sugar.Growl.show('Loading!', 'Downloading Experience','loading');
+          var url = "http://query.yahooapis.com/v1/public/yql"
+          var getdata =
+          {
+            q: "select * from html where url='\
+            http://www.erowid.org/experiences/exp.php?ID="+encodeURIComponent(reportid)+"'\
+            and xpath='//div[@class=\"report-text-surround\"]/p' and charset='iso-8859-1'",
+            format:'json',
+          }
+          lng.Service.cache(url, getdata, '10 minutes', function(response) 
+          {
+            executeSelect('UPDATE experiences SET content="'+
+                          response.query.results.p.content.replace(/\n/g,'<br>')+
+                          '" WHERE id='+reportid+
+                          ';',function(status){});
+            LUNGO.Sugar.Growl.hide();
+            getExperience(reportid);
+          });
+        }
+        else
+        {
+          App.View.makeExperiencePage(result);
+        }
+      });
   };
 
   var makeTop10 = function() 
@@ -202,7 +229,8 @@ App.Data = (function(lng, app, undefined)
     type:               type,
     getExperience:      getExperience,
     getInfolinks:       getInfolinks,
-    searchSubstance:    searchSubstance
+    searchSubstance:    searchSubstance,
+    getNextExperience:  getNextExperience
   }
 
 })(LUNGO, App);
