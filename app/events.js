@@ -27,6 +27,7 @@ App.Events = (function(lng, app, undefined)
     App.Data.getExperience(event.currentTarget.id);
   });
 
+
   lng.dom('.search-icon').tap(function()
   {
     lng.dom('.aside-search').show();
@@ -35,8 +36,27 @@ App.Events = (function(lng, app, undefined)
 
   $('input[type="search"]').keyup(function(event)
   {
-    console.log(event.target.value);
     App.Data.searchSubstance(event.target.value);
+  });
+
+  $('input[type="search"]').blur(function(event)
+  {
+    if ($('input[type="search"]').val()=="")
+    {
+      setTimeout(function()
+      {
+        App.Data.searchSubstance("");
+        lng.dom('.aside-search').hide();
+      },800);
+    }
+  });
+
+
+
+  $('input + a').click(function(event)
+  {
+    App.Data.searchSubstance("");
+    lng.dom('.aside-search').hide();
   });
 
   lng.dom('.reporttext').swipeRight(function()
@@ -53,13 +73,16 @@ App.Events = (function(lng, app, undefined)
   {
     GetNext("next");
   });
-  
 
   lng.dom('.reportarrowright').tap(function()
   {
     GetNext("next");
   });
 
+  $(document).keyup(function (e) {
+    if(e.which == 37) { GetNext("prev"); }
+    else if (e.which == 35) { GetNext("next"); }
+  });
 
   function GetNext(nextprev)
   {

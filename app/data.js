@@ -83,7 +83,9 @@ App.Data = (function(lng, app, undefined)
     }
     executeSelect('SELECT id FROM experiences WHERE id '+arrow+' "'+current+'" AND subid='+subid+' '+order+' LIMIT 1',
                   function(result) {
-                    getExperience(result[0].id);
+                    if (result[0] != null){
+                      getExperience(result[0].id);
+                    }
                   });
   }
 
@@ -134,7 +136,6 @@ App.Data = (function(lng, app, undefined)
 
   var searchSubstance = function(name)
   {
-    console.log('searching for...'+ name);
     executeSelect('SELECT * FROM substances WHERE name LIKE "%'+ name +'%" ORDER BY name ASC',
       function(result)
       {
