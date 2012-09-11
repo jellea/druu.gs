@@ -4,7 +4,6 @@ App.Events = (function(lng, app, undefined)
   {
     var substanceobj = lng.Data.Sql.select ('substances', {id:substanceid}, function (substanceobj)
     {
-      console.log(substanceobj);
       if(substanceobj != null)
       {
         lng.dom('#welcome header .title').text(substanceobj.name);
@@ -31,6 +30,13 @@ App.Events = (function(lng, app, undefined)
   lng.dom('.search-icon').tap(function()
   {
     lng.dom('.aside-search').show();
+    $('input[type="search"]').focus();
+  });
+
+  $('input[type="search"]').keyup(function(event)
+  {
+    console.log(event.target.value);
+    App.Data.searchSubstance(event.target.value);
   });
 
   lng.View.Aside.show('#welcome', '#substances-aside');

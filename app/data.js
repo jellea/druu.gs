@@ -1,12 +1,16 @@
-App.Data = (function(lng, app, undefined) {
-  lng.Data.Sql.init({
+App.Data = (function(lng, app, undefined)
+{
+  lng.Data.Sql.init(
+  {
     name: 'druu.gs',
     version: '1.0',
-    schema: [
+    schema: 
+    [
       {
         name: 'substances',
         drop: false,
-        fields: {
+        fields:
+        {
           id: 'INTEGER PRIMARY KEY',
           name: 'TEXT',
           info: 'TEXT',
@@ -24,7 +28,8 @@ App.Data = (function(lng, app, undefined) {
       {
         name: 'experiences',
         drop: true,
-        fields: {
+        fields:
+        {
           id: 'INTEGER PRIMARY KEY',
           fav: 'INTEGER DEFAULT 0',
           title: 'TEXT',
@@ -86,7 +91,7 @@ App.Data = (function(lng, app, undefined) {
     });
   };
 
-  var makeTop10 = function () 
+  var makeTop10 = function() 
   {
     executeSelect('SELECT * FROM substances ORDER BY totalexp DESC LIMIT 10',
       function(result) {
@@ -100,6 +105,17 @@ App.Data = (function(lng, app, undefined) {
     );
   }
 
+  var searchSubstance = function(name)
+  {
+    console.log('searching for...'+ name);
+    executeSelect('SELECT * FROM substances WHERE name LIKE "%'+ name +'%" ORDER BY name ASC',
+      function(result)
+      {
+        console.log(result);
+        App.View.makeAsideSubstanceList(result);
+      }
+    );
+  }
 
   var getSubstanceList = function()
   {
@@ -185,7 +201,8 @@ App.Data = (function(lng, app, undefined) {
     getExperiencesList: getExperiencesList,
     type:               type,
     getExperience:      getExperience,
-    getInfolinks:       getInfolinks
+    getInfolinks:       getInfolinks,
+    searchSubstance:    searchSubstance
   }
 
 })(LUNGO, App);
