@@ -24,34 +24,40 @@ App.View = (function(lng, app, undefined) {
                            );
 
 
-  var makeExperiencePage = function(data){
+  var makeExperiencePage = function(data)
+  {
     lng.View.Template.render('.reporttext', 'reportpage-tmp', data);
     lng.View.Scroll.refresh('reportpage');
     lng.View.Scroll.first('details-experiences');
     $('.reporttext').css('-webkit-transform',"translate3d(0px, 0px, 0px) scale(1)") // do without jquery
   };
 
-  var makeFavoritesList = function(data){
+  var makeFavoritesList = function(data)
+  {
     lng.View.Template.render('#favlist', 'favorites-tmp', data); // lng.View.Scroll.append?
     lng.View.Scroll.refresh('welcome');
   };
 
-  var makeAsideSubstanceList = function(data){
-    lng.View.Template.render('#substances-aside .aside-items', 'substances-aside-tmp', data);
+  var makeAsideSubstanceList = function(data)
+  {
+    lng.View.Template.render('#substances-aside .aside-items',
+                             'substances-aside-tmp', data);
     lng.View.Scroll.refresh('substances-aside');
     for(item in data){
-      lng.View.Element.count('#substances-aside a[id="' + data[item].id + '"]', data[item].totalexp);
+      lng.View.Element.count('#substances-aside a[id="' + data[item].id +
+                             '"]', data[item].totalexp);
     }
   };
 
-  var makeExperiencesList = function(data){
-    console.log(data);
+  var makeExperiencesList = function(data)
+  {
     lng.View.Template.render('#details-experiences ul', 'experiencelist-tmp', data);
     lng.View.Scroll.refresh('details-experiences');
     LUNGO.Sugar.Growl.hide();
   };
 
-  var scrollUp = function(){
+  var scrollUp = function()
+  {
     lng.View.Scroll.first('#details-experiences');
   };
 
