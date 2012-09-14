@@ -6,7 +6,7 @@ App.Events = (function(lng, app, undefined)
     {
       if(substanceobj != null)
       {
-        _gaq.push(['_trackPageview', '/substance-'+substanceobj.name+'']);
+        _gaq.push(['_trackPageview', '/#/substance-'+substanceobj.name+'']);
         lng.dom('#welcome header .title').text(substanceobj.name);
         lng.dom('a[id="'+substanceid+'"] span.bubble.count').text(substanceobj.totalexp); // How to select id?
         lng.dom('.aside-item').removeClass("current"); // Make it more accurate!
@@ -28,7 +28,7 @@ App.Events = (function(lng, app, undefined)
     if (event.currentTarget.id != "NoGo")
     {
       App.Data.getExperience(event.currentTarget.id);
-      _gaq.push(['_trackPageview', '/experience-'+event.currentTarget.id+'']);
+      _gaq.push(['_trackPageview', '/#/experience-'+event.currentTarget.id+'']);
     }
   });
 
