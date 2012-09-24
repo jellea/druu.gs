@@ -3,7 +3,7 @@ var App = (function(lng, undefined) {
     //Define your LungoJS Application Instance
     lng.App.init({
         name: 'erowid',
-        version: '1.1',
+        version: '1.1'
          });
 
     return {
@@ -52,7 +52,7 @@ App.Data = (function(lng, app, undefined)
           date: 'TEXT',
           url: 'TEXT',
           subs: 'TEXT',
-          subid: 'INTEGER',
+          subid: 'INTEGER'
         }
       }
     ]
@@ -115,7 +115,7 @@ App.Data = (function(lng, app, undefined)
             q: "select * from html where url='\
             http://www.erowid.org/experiences/exp.php?ID="+encodeURIComponent(reportid)+"'\
             and xpath='//div[@class=\"report-text-surround\"]/p' and charset='iso-8859-1'",
-            format:'json',
+            format:'json'
           }
           lng.Service.cache(url, getdata, '10 minutes', function(response) 
           {
@@ -178,7 +178,6 @@ App.Data = (function(lng, app, undefined)
     executeSelect('SELECT * FROM substances WHERE name LIKE "%'+ name +'%" ORDER BY name ASC',
       function(result)
       {
-        console.log(result);
         App.View.makeAsideSubstanceList(result);
       }
     );
@@ -229,10 +228,10 @@ App.Data = (function(lng, app, undefined)
           var url = "http://query.yahooapis.com/v1/public/yql";
           var getdata =
           {
-            q: "select * from html where url='"+
+            'q': "select * from html where url='"+
               encodeURIComponent(substanceobj[0].exp)+
               "' and xpath='//center/table/tr/td/form/table/tr[position()>2]'",
-            format:'json'
+            'format':'json'
           }
           lng.Service.cache(url, getdata, '10 days', function(response) 
           {
@@ -279,111 +278,119 @@ App.Data = (function(lng, app, undefined)
 })(LUNGO, App);
 
 
-App.Events = (function(lng, app, undefined) {
-  var goToSubtance = function (substanceid) {
+App.Events = (function(lng, app, undefined)
+{
+  lng.ready(function() {
+    lng.View.Aside.show('#welcome', '#substances-aside');
+  });
+
+  var goToSubtance = function (substanceid)
+  {
     var substanceobj = lng.Data.Sql.select ('substances', {id:substanceid}, function (substanceobj)
-                                            {
-                                              if(substanceobj != null)
-                                                {
-                                                  _gaq.push(['_trackPageview', '/#/substance-'+substanceobj.name+'']);
-                                                  lng.dom('#welcome header .title').text(substanceobj.name);
-                                                  lng.dom('a[id="'+substanceid+'"] span.bubble.count').text(substanceobj.totalexp); // How to select id?
-                                                  lng.dom('.aside-item').removeClass("current"); // Make it more accurate!
-                                                  lng.dom('a[id="' + substanceid + '"]').addClass("current"); // How to select id?
-                                                  App.Data.getExperiencesList(substanceobj);
-                                                  App.Data.getInfolinks(substanceobj);
-                                                };
-                                            });
+    {
+      if(substanceobj != null)
+      {
+        console.log(substanceobj.name);
+        _gaq.push(['_trackPageview', '/#/substance-'+substanceobj.name+'']);
+        lng.dom('#welcome header .title').text(substanceobj.name);
+        lng.dom('a[id="'+substanceid+'"] span.bubble.count').text(substanceobj.totalexp); // How to select id?
+        lng.dom('.aside-item').removeClass("current"); // Make it more accurate!
+        lng.dom('a[id="' + substanceid + '"]').addClass("current"); // How to select id?
+        App.Data.getExperiencesList(substanceobj);
+        App.Data.getInfolinks(substanceobj);
+      };
+    });
   };
 
+
   lng.dom('a[href="#details-experiences"]').tap(function(event)
-                                                {
-                                                  $('input[type="search"]').blur();
-                                                  goToSubtance(event.currentTarget.id);
-                                                });
+  {
+    $('input[type="search"]').blur();
+    goToSubtance(event.currentTarget.id);
+  });
 
-                                                lng.dom('a[href="#report"]').tap(function(event)
-                                                                                 {
-                                                                                   if (event.currentTarget.id != "NoGo")
-                                                                                     {
-                                                                                       App.Data.getExperience(event.currentTarget.id);
-                                                                                       _gaq.push(['_trackPageview', '/#/experience-'+event.currentTarget.id+'']);
-                                                                                     }
-                                                                                 });
+  lng.dom('a[href="#report"]').tap(function(event)
+  {
+    if (event.currentTarget.id != "NoGo")
+    {
+      App.Data.getExperience(event.currentTarget.id);
+      _gaq.push(['_trackPageview', '/#/experience-'+event.currentTarget.id+'']);
+    }
+  });
 
-                                                                                 lng.dom('.search-icon').tap(function()
-                                                                                                             {
-                                                                                                               lng.dom('.aside-search').show();
-                                                                                                               $('input[type="search"]').focus();
-                                                                                                             });
+  lng.dom('.search-icon').tap(function()
+  {
+    lng.dom('.aside-search').show();
+    $('input[type="search"]').focus();
+  });
 
-                                                                                                             $('input[type="search"]').keyup(function(event)
-                                                                                                                                             {
-                                                                                                                                               App.Data.searchSubstance(event.target.value);
-                                                                                                                                             });
+  $('input[type="search"]').keyup(function(event)
+  {
+    App.Data.searchSubstance(event.target.value);
+  });
 
-                                                                                                                                             $('input[type="search"]').blur(function(event)
-                                                                                                                                                                            {
-                                                                                                                                                                              if ($('input[type="search"]').val()=="")
-                                                                                                                                                                                {
-                                                                                                                                                                                  setTimeout(function()
-                                                                                                                                                                                             {
-                                                                                                                                                                                               App.Data.searchSubstance("");
-                                                                                                                                                                                               lng.dom('.aside-search').hide();
-                                                                                                                                                                                             },800);
-                                                                                                                                                                                }
-                                                                                                                                                                            });
+  $('input[type="search"]').blur(function(event)
+  {
+    if ($('input[type="search"]').val()=="")
+    {
+      setTimeout(function()
+      {
+        App.Data.searchSubstance("");
+        lng.dom('.aside-search').hide();
+      },800);
+    }
+  });
 
-                                                                                                                                                                            $('input + a').click(function(event)
-                                                                                                                                                                                                 {
-                                                                                                                                                                                                   App.Data.searchSubstance("");
-                                                                                                                                                                                                   lng.dom('.aside-search').hide();
-                                                                                                                                                                                                 });
+  $('input + a').click(function(event)
+  {
+    App.Data.searchSubstance("");
+    lng.dom('.aside-search').hide();
+  });
 
-                                                                                                                                                                                                 lng.dom('.reporttext').swipeRight(function()
-                                                                                                                                                                                                                                   {
-                                                                                                                                                                                                                                     GetNext("prev");
-                                                                                                                                                                                                                                   });
+  lng.dom('.reporttext').swipeRight(function()
+  {
+    GetNext("prev");
+  });
 
-                                                                                                                                                                                                                                   lng.dom('.reportarrowleft').tap(function()
-                                                                                                                                                                                                                                                                   {
-                                                                                                                                                                                                                                                                     GetNext("prev");
-                                                                                                                                                                                                                                                                   });
+  lng.dom('.reportarrowleft').tap(function()
+  {
+    GetNext("prev");
+  });
 
-                                                                                                                                                                                                                                                                   lng.dom('.reporttext').swipeLeft(function()
-                                                                                                                                                                                                                                                                                                    {
-                                                                                                                                                                                                                                                                                                      GetNext("next");
-                                                                                                                                                                                                                                                                                                    });
+  lng.dom('.reporttext').swipeLeft(function()
+  {
+    GetNext("next");
+  });
 
-                                                                                                                                                                                                                                                                                                    lng.dom('.reportarrowright').tap(function()
-                                                                                                                                                                                                                                                                                                                                     {
-                                                                                                                                                                                                                                                                                                                                       GetNext("next");
-                                                                                                                                                                                                                                                                                                                                     });
+  lng.dom('.reportarrowright').tap(function()
+  {
+    GetNext("next");
+  });
 
-                                                                                                                                                                                                                                                                                                                                     $(document).keyup(function (e) {
-                                                                                                                                                                                                                                                                                                                                       if (e.which == 37) { GetNext("prev"); }
-                                                                                                                                                                                                                                                                                                                                       else if (e.which == 35) { GetNext("next"); }
-                                                                                                                                                                                                                                                                                                                                     });
+  $(document).keyup(function (e) {
+    if (e.which == 37) { GetNext("prev"); }
+    else if (e.which == 35) { GetNext("next"); }
+  });
 
-                                                                                                                                                                                                                                                                                                                                     function GetNext(nextprev)
-                                                                                                                                                                                                                                                                                                                                     {
-                                                                                                                                                                                                                                                                                                                                       App.Data.getNextExperience(
-                                                                                                                                                                                                                                                                                                                                         $('.reporttext').attr('id'),
-                                                                                                                                                                                                                                                                                                                                         $('.reporttext').attr('subid'),
-                                                                                                                                                                                                                                                                                                                                         nextprev);
-                                                                                                                                                                                                                                                                                                                                     }
+  function GetNext(nextprev)
+  {
+    App.Data.getNextExperience(
+      $('.reporttext').attr('id'),
+      $('.reporttext').attr('subid'),
+      nextprev);
+  }
 
-                                                                                                                                                                                                                                                                                                                                     $('nav .icon.star').click(function(event)
-                                                                                                                                                                                                                                                                                                                                                               {
-                                                                                                                                                                                                                                                                                                                                                                 App.Data.setFav();
-                                                                                                                                                                                                                                                                                                                                                                 $('nav .icon.star').css("color","#fff");
-                                                                                                                                                                                                                                                                                                                                                               });
+  $('nav .icon.star').click(function(event)
+  {
+    App.Data.setFav();
+    $('nav .icon.star').css("color","#fff");
+  });
 
-                                                                                                                                                                                                                                                                                                                                                               lng.View.Aside.show('#welcome', '#substances-aside');
+  lng.View.Aside.show('#welcome', '#substances-aside');
 
-                                                                                                                                                                                                                                                                                                                                                               return {
-                                                                                                                                                                                                                                                                                                                                                                 goToSubtance: goToSubtance
-                                                                                                                                                                                                                                                                                                                                                               }
+  return {
+    goToSubtance: goToSubtance
+  }
 
 })(LUNGO, App);
 
