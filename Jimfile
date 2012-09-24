@@ -1,0 +1,20 @@
+{
+  "bundle_dir": "js",
+  "compressed": true,
+  "compressed_suffix": ".min",
+  "vendor_dir": "assets/javascripts",
+  "bundles": {
+    "core": [
+      "jquery-1.7.2",
+      "/lungo.js/lungo-1.2",
+      "lungo.sugar.growl"
+    ],
+    "app": [
+      "/app/app",
+      "/app/data",
+      "/app/events",
+      "/app/services",
+      "/app/view"
+    ]
+  }
+}
