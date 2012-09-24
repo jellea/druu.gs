@@ -38,7 +38,7 @@ App.Data = (function(lng, app, undefined)
           date: 'TEXT',
           url: 'TEXT',
           subs: 'TEXT',
-          subid: 'INTEGER',
+          subid: 'INTEGER'
         }
       }
     ]
@@ -101,7 +101,7 @@ App.Data = (function(lng, app, undefined)
             q: "select * from html where url='\
             http://www.erowid.org/experiences/exp.php?ID="+encodeURIComponent(reportid)+"'\
             and xpath='//div[@class=\"report-text-surround\"]/p' and charset='iso-8859-1'",
-            format:'json',
+            format:'json'
           }
           lng.Service.cache(url, getdata, '10 minutes', function(response) 
           {
@@ -164,7 +164,6 @@ App.Data = (function(lng, app, undefined)
     executeSelect('SELECT * FROM substances WHERE name LIKE "%'+ name +'%" ORDER BY name ASC',
       function(result)
       {
-        console.log(result);
         App.View.makeAsideSubstanceList(result);
       }
     );
@@ -215,10 +214,10 @@ App.Data = (function(lng, app, undefined)
           var url = "http://query.yahooapis.com/v1/public/yql";
           var getdata =
           {
-            q: "select * from html where url='"+
+            'q': "select * from html where url='"+
               encodeURIComponent(substanceobj[0].exp)+
               "' and xpath='//center/table/tr/td/form/table/tr[position()>2]'",
-            format:'json'
+            'format':'json'
           }
           lng.Service.cache(url, getdata, '10 days', function(response) 
           {

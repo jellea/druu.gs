@@ -1,5 +1,9 @@
 App.Events = (function(lng, app, undefined)
 {
+  lng.ready(function() {
+    lng.View.Aside.show('#welcome', '#substances-aside');
+  });
+
   var goToSubtance = function (substanceid)
   {
     var substanceobj = lng.Data.Sql.select ('substances', {id:substanceid}, function (substanceobj)
@@ -16,6 +20,7 @@ App.Events = (function(lng, app, undefined)
       };
     });
   };
+
 
   lng.dom('a[href="#details-experiences"]').tap(function(event)
   {
